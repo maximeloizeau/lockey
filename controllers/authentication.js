@@ -11,10 +11,7 @@ let cryptPassword = function(password) {
 }
 
 let loginFailed = function(reply) {
-    reply({
-        success: false,
-        message: 'Login unsuccessful'
-    });
+    reply(Boom.unauthorized());
 }
 
 let logUserIn = function(email, hash, reply) {
@@ -27,12 +24,8 @@ let logUserIn = function(email, hash, reply) {
             .then(
                 savedUser => {
                     reply({
-                        success: true,
-                        message: 'Login successful',
-                        data: {
-                            token: token,
-                            expiry: new Date().getTime() + 60*60*24*30
-                        }
+                        token: token,
+                        expiry: new Date().getTime() + 60*60*24*30
                     });
                 },
                 err => {
@@ -64,10 +57,7 @@ module.exports = {
         User.findOne({ 'email': email })
         .then(user => {
             if(user) {
-                reply({
-                    success: false,
-                    message: 'User already registered'
-                });
+                reply(Boom.badRequest('Email already in use'));
             }
             else {
                 let createdUser = new User({
@@ -83,10 +73,7 @@ module.exports = {
                         logUserIn(email, password, reply);
                     },
                     err => {
-                        return reply({
-                            success: false,
-                            message: "A problem occured during registration"
-                        });
+                        return reply(Boom.badRequest('A problem occured during registration'));
                     }
                 );
             }
@@ -98,10 +85,7 @@ module.exports = {
             request.app.user.token = undefined;
             request.app.user.save()
             .then(u => {
-                reply({
-                    success: true,
-                    message: "Successfully logged out"
-                });
+                reply();
             });
         }
     }
