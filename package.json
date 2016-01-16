@@ -1,0 +1,17 @@
+{
+  "name": "lockey",
+  "version": "0.0.1",
+  "description": "API for lockey",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Maxime Loizeau",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^12.1.0",
+    "jsonwebtoken": "^5.5.4",
+    "mongoose": "^4.3.6",
+    "underscore": "^1.8.3"
+  }
+}
