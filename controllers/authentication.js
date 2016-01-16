@@ -23,10 +23,7 @@ let logUserIn = function(email, hash, reply) {
             user.save()
             .then(
                 savedUser => {
-                    reply({
-                        token: token,
-                        expiry: new Date().getTime() + 60*60*24*30
-                    });
+                    reply(savedUser.formatWithToken());
                 },
                 err => {
                     loginFailed(reply);

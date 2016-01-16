@@ -10,11 +10,19 @@ let userSchema = mongoose.Schema({
 	email:     String,
 	password:  String,
 	phone:     String,
-	token:     String
+	token:     String,
+	tokenExpiry: Date
 }, options);
 
-userSchema.methods.format = function() {
-	var safeUser = {};
+userSchema.methods.formatWithToken = function() {
+	let safeFields = safeAttributes.concat(['token', 'tokenExpiry']);
+	return this.format(safeFields);
+};
+
+userSchema.methods.format = function(fields) {
+	let safeFields = fields || safeAttributes;
+
+	let safeUser = {};
 	safeAttributes.forEach(a => {
 		safeUser[a] = this[a];
 	});
