@@ -1,8 +1,10 @@
 'use strict';
 
+const localtunnel = require('localtunnel');
 const Hapi = require('hapi');
 const mongoose = require('mongoose');
 
+const config = require('./config/app');
 const authMiddleware = require('./middlewares/auth');
 const routes = require('./routes')
 
@@ -10,7 +12,7 @@ const routes = require('./routes')
 const server = new Hapi.Server();
 server.connection({ 
     host: 'localhost', 
-    port: 8080 
+    port: config.port 
 });
 
 for (var route in routes) {
@@ -43,4 +45,11 @@ server.start((err) => {
         throw err;
     }
     console.log('Server running at:', server.info.uri);
+
+    const requestedSubdomain = 'lockey16';
+    let tunnel = localtunnel(config.port, { 'subdomain': requestedSubdomain }, function(err, tunnel) {
+        if (err) throw err;
+
+        console.log('Local tunnel on subdomain : ' + tunnel.url);
+    });
 });
