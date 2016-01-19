@@ -26,7 +26,7 @@ userSchema.methods.format = function(fields) {
 	let safeFields = fields || safeAttributes;
 
 	let safeUser = {};
-	safeAttributes.forEach(a => {
+	safeFields.forEach(a => {
 		safeUser[a] = this[a];
 	});
 

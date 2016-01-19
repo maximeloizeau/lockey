@@ -20,8 +20,12 @@ let logUserIn = function(email, hash, reply) {
     User.findOne({ 'email': email, 'password': hash })
     .then(user => {
         if(user) {
-            let token = jwt.sign({ email: email }, config.secret, { expiresIn: '30d' });
+            // Expiration period in days
+            const expirationPeriod = 30;
+            let token = jwt.sign({ email: email }, config.secret, { expiresIn: expirationPeriod + 'd' });
+
             user.token = token;
+            user.tokenExpiry = new Date(Date.now() + 60 * 60 * 24 * 30);
             user.save()
             .then(
                 savedUser => {
