@@ -1,22 +1,22 @@
 'use strict';
 
-const apartmentController = require('../controllers/apartment');
+const housingController = require('../controllers/housing');
 
 module.exports = function() {
     return [
         {
             method: 'POST',
-            path: '/apartments',
+            path: '/housings',
             config : {
-                handler: apartmentController.create
+                handler: housingController.create
                 //validate: taskValidate.findByID
             }
         },
         {
             method: 'GET',
-            path: '/apartments',
+            path: '/housings',
             config : {
-                handler: apartmentController.getAll
+                handler: housingController.getAll
                 //validate: taskValidate.findByID
             }
         }

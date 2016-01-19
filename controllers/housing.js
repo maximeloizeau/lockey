@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require('../config/app');
-const Apartment = require('../models/apartment');
+const Housing = require('../models/housing');
 const User = require('../models/user').User;
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
         const type = request.payload.type;
         const description = request.payload.description;
 
-        let apartment = new Apartment({
+        let housing = new Housing({
             address: address,
             rent: rent,
             utilities: utilities,
@@ -23,16 +23,16 @@ module.exports = {
             description: description,
             _owner: request.app.user
         });
-        apartment.save()
+        housing.save()
         .then(appt => {
             reply(appt)
         });
     },
 
     getAll: function(request, reply) {
-        Apartment.find({ _owner: request.app.user })
-        .then(appts => {
-            reply(appts);
+        Housing.find({ _owner: request.app.user })
+        .then(housings => {
+            reply(housings);
         })
     }
 

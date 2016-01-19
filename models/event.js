@@ -6,7 +6,7 @@ let eventSchema = mongoose.Schema({
 	startingDate: 	Date,
 	agreedLength: 	Number,
 	rentDay: 		Number,
-	_apartment: 	Schema.Types.ObjectId,
+	_housing: 		Schema.Types.ObjectId,
 	_tenant: 		Schema.Types.ObjectId,
 	documents: 		[String],
 	history: 		[Schema.Types.ObjectId]
