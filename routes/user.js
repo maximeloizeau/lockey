@@ -6,7 +6,7 @@ module.exports = function() {
     return [
         {
             method: 'GET',
-            path: '/users/me',
+            path: '/users/me/',
             config : {
                 handler: userController.me
                 //validate: taskValidate.findByID

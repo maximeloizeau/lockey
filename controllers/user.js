@@ -4,6 +4,7 @@ const Boom = require('boom');
 
 const config = require('../config/app');
 const User = require('../models/user').User;
+const Tenant = require('../models/user').Tenant;
 
 module.exports = {
     

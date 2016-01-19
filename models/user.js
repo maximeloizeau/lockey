@@ -3,7 +3,8 @@
 const mongoose = require('mongoose');
 const options = { discriminatorKey: 'type' };
 
-const safeAttributes = ['firstname', 'lastname', 'email', 'phone'];
+// User model
+const safeAttributes = ['firstname', 'lastname', 'email', 'phone', 'type'];
 let userSchema = mongoose.Schema({
 	firstname: String,
 	lastname:  String,
@@ -13,6 +14,8 @@ let userSchema = mongoose.Schema({
 	token:     String,
 	tokenExpiry: Date
 }, options);
+
+userSchema.statics.typeName = function() { return "User" };
 
 userSchema.methods.formatWithToken = function() {
 	let safeFields = safeAttributes.concat(['token', 'tokenExpiry']);
@@ -32,10 +35,14 @@ userSchema.methods.format = function(fields) {
 
 let User = mongoose.model('User', userSchema);
 
+// Owner model
 let ownerSchema = mongoose.Schema({}, options);
+ownerSchema.statics.typeName = function() { return "Owner" };
 let Owner = User.discriminator('Owner', ownerSchema);
 
+// Tenant model
 let tenantSchema = mongoose.Schema({}, options);
+tenantSchema.statics.typeName = function() { return "Tenant" };
 let Tenant = User.discriminator('Tenant', tenantSchema);
 
 module.exports = {

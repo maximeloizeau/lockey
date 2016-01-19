@@ -1,17 +1,19 @@
 'use strict';
 
+const Boom = require('boom');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
 const config = require('../config/app');
-const User = require('../models/user').User;
+const Users = require('../models/user');
+const User = Users.User;
 
 let cryptPassword = function(password) {
     return crypto.createHash('sha256').update(password + config.secret).digest('hex');
 }
 
 let loginFailed = function(reply) {
-    reply(Boom.unauthorized());
+    return reply(Boom.unauthorized('Login failed'));
 }
 
 let logUserIn = function(email, hash, reply) {
@@ -23,16 +25,18 @@ let logUserIn = function(email, hash, reply) {
             user.save()
             .then(
                 savedUser => {
-                    reply(savedUser.formatWithToken());
+                    return reply(savedUser.formatWithToken());
                 },
                 err => {
-                    loginFailed(reply);
+                    return loginFailed(reply);
                 }
             );
         }
         else {
-            loginFailed(reply);
+            return loginFailed(reply);
         }
+    }, err => {
+        return loginFailed(reply);
     });
 }
 
@@ -42,7 +46,7 @@ module.exports = {
         let email = request.payload.email;
         let password = cryptPassword(request.payload.password);
 
-        logUserIn(email, password, reply);
+        return logUserIn(email, password, reply);
     },
 
     signup: function(request, reply) {
@@ -50,31 +54,40 @@ module.exports = {
         let firstname = request.payload.firstname;
         let lastname = request.payload.lastname;
         let password = cryptPassword(request.payload.password);
+        let type = request.payload.type;
 
         User.findOne({ 'email': email })
         .then(user => {
             if(user) {
-                reply(Boom.badRequest('Email already in use'));
+                return reply(Boom.badRequest('Email already in use'));
             }
             else {
-                let createdUser = new User({
+                let createdUser;
+                let fields = {
                     firstname: firstname,
                     lastname: lastname,
                     email: email,
                     password: password
-                });
+                };
 
+                for(let userType in Users) {
+                    if(Users[userType].typeName() === type) {
+                        createdUser = new Users[userType](fields);
+                        break;
+                    }
+                }
+                
                 createdUser.save()
                 .then(
                     savedUser => {
                         logUserIn(email, password, reply);
                     },
                     err => {
-                        return reply(Boom.badRequest('A problem occured during registration'));
+                        reply(Boom.badRequest('A problem occured during registration'));
                     }
                 );
             }
-        })
+        });
     },
 
     logout: function(request, reply) {

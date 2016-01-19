@@ -19,6 +19,8 @@ module.exports = {
                 if(!user) return next(false);
 
                 next(true, user);
+            }, err => {
+            	next(false);
             });
         });
     }

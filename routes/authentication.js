@@ -6,7 +6,7 @@ module.exports = function() {
     return [
         {
             method: 'POST',
-            path: '/login',
+            path: '/login/',
             config : {
                 handler: authController.login
                 //validate: taskValidate.findByID
@@ -14,7 +14,7 @@ module.exports = function() {
         },
         {
             method: 'POST',
-            path: '/signup',
+            path: '/signup/',
             config : {
                 handler: authController.signup
                 //validate: taskValidate.findByID
@@ -22,7 +22,7 @@ module.exports = function() {
         },
         {
             method: 'POST',
-            path: '/logout',
+            path: '/logout/',
             config : {
                 handler: authController.logout
                 //validate: taskValidate.findByID
